@@ -92,8 +92,8 @@ async function main() {
         console.log(`Trade Fee Paid: ${quote.feePaid.toString()}`);
         // console.log(`Price Impact: ${quote.priceImpact}%`);
         if (quote.reserves) {
-            console.log(`ReserveA: ${quote.reserves[0].toString()}`);
-            console.log(`ReserveB: ${quote.reserves[1].toString()}`);
+            // console.log(`ReserveA: ${quote.reserves[0].toString()}`);
+            // console.log(`ReserveB: ${quote.reserves[1].toString()}`);
         }
 
     } catch (e: any) {

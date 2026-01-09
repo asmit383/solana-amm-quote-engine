@@ -5,7 +5,7 @@ import { PROGRAM_IDS } from '../utils/constants.js';
 import { WhirlpoolContext, buildWhirlpoolClient, swapQuoteByInputToken } from '@orca-so/whirlpools-sdk';
 import { Percentage } from '@orca-so/common-sdk';
 
-// Dummy Wallet
+
 const dummyWallet = {
     publicKey: new PublicKey('11111111111111111111111111111111'),
     signTransaction: async (tx: any) => tx,
@@ -17,7 +17,7 @@ export class OrcaHandler implements DexHandler {
     programIds = [PROGRAM_IDS.ORCA_WHIRLPOOL];
 
     async getQuote(connection: Connection, request: QuoteRequest): Promise<QuoteResponse> {
-        // Correct initialization of WhirlpoolContext
+
         const context = WhirlpoolContext.from(
             connection,
             dummyWallet as any
