@@ -17,18 +17,17 @@ export class RaydiumCPMMHandler implements DexHandler {
 
         const poolId = request.poolAddress.toBase58();
 
-        // 1. Fetch live pool info including config (fee) info
+
         const poolRes = await raydium.cpmm.getRpcPoolInfo(poolId, true);
         if (!poolRes) throw new Error('Failed to fetch CPMM pool info');
 
-        // 2. Fetch mint info for both tokens (required for compute data)
+
         const [mintAInfo, mintBInfo] = await Promise.all([
             raydium.token.getTokenInfo(poolRes.mintA),
             raydium.token.getTokenInfo(poolRes.mintB)
         ]);
 
-        // 3. Construct the compute data object
-        // We cast to any to handle potential property name variations across SDK versions
+
         const computeData: any = {
             ...poolRes,
             id: request.poolAddress,
@@ -37,13 +36,13 @@ export class RaydiumCPMMHandler implements DexHandler {
             mintB: mintBInfo,
         };
 
-        // 4. Handle Reserve Overrides
+
         if (request.overrideReserves) {
             computeData.vaultAAmount = request.overrideReserves.reserveA;
             computeData.vaultBAmount = request.overrideReserves.reserveB;
         }
 
-        // 5. Determine Direction and Output Mint
+
         const inputMintStr = request.inputMint.toBase58();
         const mintAStr = (typeof poolRes.mintA === 'string') ? poolRes.mintA : poolRes.mintA.toBase58();
         const mintBStr = (typeof poolRes.mintB === 'string') ? poolRes.mintB : poolRes.mintB.toBase58();
@@ -57,7 +56,7 @@ export class RaydiumCPMMHandler implements DexHandler {
             throw new Error('Input mint does not match pool tokens');
         }
 
-        // 6. Use SDK calculation method - This is strictly RPC and SDK driven (no hardcoded fees)
+
         const quote = raydium.cpmm.computeSwapAmount({
             pool: computeData,
             amountIn: request.inputAmount,

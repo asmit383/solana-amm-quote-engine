@@ -2,7 +2,7 @@ import { Connection } from '@solana/web3.js';
 import BN from 'bn.js';
 import { DexHandler, QuoteRequest, QuoteResponse, DexType } from '../types.js';
 import { PROGRAM_IDS } from '../utils/constants.js';
-// @ts-ignore
+
 import { Raydium, PoolUtils } from '@raydium-io/raydium-sdk-v2';
 
 export class RaydiumCLMMHandler implements DexHandler {
