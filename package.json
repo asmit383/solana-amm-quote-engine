@@ -13,7 +13,9 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@meteora-ag/cp-amm-sdk": "^1.2.8",
     "@meteora-ag/dlmm": "^1.9.3",
+    "@meteora-ag/m3m3": "^1.0.10",
     "@orca-so/whirlpools-sdk": "^0.17.4",
     "@raydium-io/raydium-sdk-v2": "^0.2.32-alpha",
     "@solana/buffer-layout": "^4.0.1",

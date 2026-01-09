@@ -14,7 +14,7 @@ const PUMP_LAYOUT = BufferLayout.struct<any>([
     BufferLayout.u8('complete'),
 ]);
 
-const PUMP_FEE_BPS = new BN(100); // 1%
+const PUMP_FEE_BPS = new BN(100);
 
 export class PumpHandler implements DexHandler {
     dexType = DexType.PumpSwap;
@@ -35,7 +35,7 @@ export class PumpHandler implements DexHandler {
         const isBuy = request.inputMint.equals(MINT_SOL);
 
         if (isBuy) {
-            // Try to find the token vault
+
             const tokenAccounts = await connection.getParsedTokenAccountsByOwner(request.poolAddress, {
                 programId: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
             });
@@ -66,7 +66,7 @@ export class PumpHandler implements DexHandler {
         let impact = 0;
 
         if (isBuy) {
-            // Buy Token with SOL
+
             const k = vSol.mul(vToken);
             const newVSol = vSol.add(amountInWithFee);
             const newVToken = k.div(newVSol).add(new BN(1));
@@ -77,7 +77,7 @@ export class PumpHandler implements DexHandler {
             impact = ratio.toNumber() / 100;
 
         } else {
-            // Sell Token for SOL
+
             const k = vSol.mul(vToken);
             const newVToken = vToken.add(amountInWithFee);
             const newVSol = k.div(newVToken).add(new BN(1));

@@ -7,6 +7,7 @@ export enum DexType {
     RaydiumCLMM = 'Raydium CLMM',
     OrcaWhirlpool = 'Orca Whirlpools',
     MeteoraDLMM = 'Meteora DLMM',
+    MeteoraDAMM = 'Meteora DAMM',
     Unknown = 'Unknown'
 }
 
@@ -14,7 +15,7 @@ export interface QuoteRequest {
     poolAddress: PublicKey;
     inputMint: PublicKey;
     inputAmount: BN;
-    slippagePercent: number; // e.g., 1 for 1%
+    slippagePercent: number;
     overrideReserves?: {
         reserveA: BN; // Corresponds to Sol (Pump) or TokenA
         reserveB: BN; // Corresponds to Token (Pump) or TokenB
@@ -26,7 +27,7 @@ export interface QuoteResponse {
     outputMint: string;
     estimatedOutputAmount: BN;
     minOutputAmount: BN;
-    priceImpact: number; // percentage
+    priceImpact: number;
     feePaid: BN;
     reserves: [BN, BN];
 }

@@ -5,6 +5,7 @@ import { RaydiumCPMMHandler } from './dex/raydium-cpmm.js';
 import { RaydiumCLMMHandler } from './dex/raydium-clmm.js';
 import { OrcaHandler } from './dex/orca.js';
 import { MeteoraHandler } from './dex/meteora.js';
+import { MeteoraDAMMHandler } from './dex/meteora-damm.js';
 
 export class DexRegistry {
     private handlers: DexHandler[];
@@ -15,7 +16,8 @@ export class DexRegistry {
             new RaydiumCPMMHandler(),
             new RaydiumCLMMHandler(),
             new OrcaHandler(),
-            new MeteoraHandler()
+            new MeteoraHandler(),
+            new MeteoraDAMMHandler()
         ];
     }
 

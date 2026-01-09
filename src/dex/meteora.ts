@@ -14,34 +14,35 @@ export class MeteoraHandler implements DexHandler {
         const tokenX = dlmmPool.tokenX;
         const tokenY = dlmmPool.tokenY;
 
-        // inputMint must match
-        // Check if tokenX has publicKey (structure might vary, usually it does)
+
         const isXtoY = request.inputMint.equals(tokenX.publicKey);
         const isYtoX = request.inputMint.equals(tokenY.publicKey);
 
         if (!isXtoY && !isYtoX) {
-            throw new Error('Input mint not in Meteora pool');
+            throw new Error(`Input mint ${request.inputMint.toBase58()} not in Meteora pool`);
         }
 
-        const swapYtoX = isYtoX;
 
-        const binArrays = await dlmmPool.getBinArrayForSwap(swapYtoX);
+        const swapForY = isXtoY;
+
+        const binArrays = await dlmmPool.getBinArrayForSwap(swapForY);
         const slippage = new BN(request.slippagePercent * 100);
+
 
         const quote = await dlmmPool.swapQuote(
             request.inputAmount,
-            swapYtoX,
+            swapForY,
             slippage,
             binArrays
         );
 
         return {
             dexType: this.dexType,
-            outputMint: swapYtoX ? tokenX.publicKey.toBase58() : tokenY.publicKey.toBase58(),
-            estimatedOutputAmount: quote.estimatedAmountOut,
-            minOutputAmount: quote.minOutputAmount,
+            outputMint: swapForY ? tokenY.publicKey.toBase58() : tokenX.publicKey.toBase58(),
+            estimatedOutputAmount: quote.outAmount,
+            minOutputAmount: quote.minOutAmount,
             priceImpact: 0,
-            feePaid: quote.protocolFee.add(quote.tradeFee),
+            feePaid: quote.fee,
             reserves: [new BN(0), new BN(0)]
         };
     }
