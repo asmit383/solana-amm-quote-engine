@@ -62,6 +62,7 @@ export class OrcaHandler implements DexHandler {
             minOutputAmount: quote.otherAmountThreshold,
             priceImpact: 0,
             feePaid: quote.estimatedFeeAmount,
+            outputMintDecimals: isAtoB ? tokenBInfo.decimals : tokenAInfo.decimals,
             reserves: [new BN(0), new BN(0)]
         };
     }

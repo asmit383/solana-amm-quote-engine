@@ -79,6 +79,7 @@ export class MeteoraDAMMHandler implements DexHandler {
             minOutputAmount: minAmountOut,
             priceImpact: impact,
             feePaid: fee,
+            outputMintDecimals: isAtoB ? decimalsB : decimalsA,
             reserves: [new BN(0), new BN(0)]
         };
     }

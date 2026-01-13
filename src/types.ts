@@ -29,6 +29,7 @@ export interface QuoteResponse {
     minOutputAmount: BN;
     priceImpact: number;
     feePaid: BN;
+    outputMintDecimals: number;
     reserves: [BN, BN];
 }
 

@@ -26,10 +26,13 @@ export class RaydiumCLMMHandler implements DexHandler {
         const mintBStr = typeof poolInfo.mintB === 'string' ? poolInfo.mintB : poolInfo.mintB.address;
 
         let tokenOut: any;
+        let outputDecimals = 0;
         if (inputMintStr === mintAStr) {
             tokenOut = poolInfo.mintB;
+            outputDecimals = (poolInfo as any).mintB.decimals || (poolInfo as any).mintDecimalsB || 0;
         } else if (inputMintStr === mintBStr) {
             tokenOut = poolInfo.mintA;
+            outputDecimals = (poolInfo as any).mintA.decimals || (poolInfo as any).mintDecimalsA || 0;
         } else {
             throw new Error(`Input mint ${inputMintStr} not found in pool ${poolId}`);
         }
@@ -56,6 +59,7 @@ export class RaydiumCLMMHandler implements DexHandler {
             minOutputAmount: quote.minAmountOut.amount.raw,
             priceImpact: 0,
             feePaid: quote.fee.raw,
+            outputMintDecimals: outputDecimals,
             reserves: [new BN(0), new BN(0)]
         };
     }

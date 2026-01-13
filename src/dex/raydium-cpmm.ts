@@ -48,10 +48,13 @@ export class RaydiumCPMMHandler implements DexHandler {
         const mintBStr = (typeof poolRes.mintB === 'string') ? poolRes.mintB : poolRes.mintB.toBase58();
 
         let outputMint: string;
+        let outputDecimals: number = 0;
         if (inputMintStr === mintAStr) {
             outputMint = mintBStr;
+            outputDecimals = mintBInfo.decimals;
         } else if (inputMintStr === mintBStr) {
             outputMint = mintAStr;
+            outputDecimals = mintAInfo.decimals;
         } else {
             throw new Error('Input mint does not match pool tokens');
         }
@@ -72,6 +75,7 @@ export class RaydiumCPMMHandler implements DexHandler {
             minOutputAmount: quote.minAmountOut,
             priceImpact: quote.priceImpact,
             feePaid: quote.fee,
+            outputMintDecimals: outputDecimals,
             reserves: [computeData.vaultAAmount, computeData.vaultBAmount]
         };
     }

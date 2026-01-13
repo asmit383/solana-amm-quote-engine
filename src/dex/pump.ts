@@ -30,8 +30,22 @@ export class PumpHandler implements DexHandler {
 
         const decoded = PUMP_LAYOUT.decode(accountInfo.data);
 
+        // Attempt to read trade_fee_bps from the account data if it extends beyond the standard layout
+        // Standard layout size = 8 (disc) + 8*5 (reserves/supply) + 1 (complete) = 49 bytes
+        let feeBps = new BN(100); // Default 1%
+        const STANDARD_LAYOUT_SIZE = 49;
+
+        if (accountInfo.data.length > STANDARD_LAYOUT_SIZE) {
+            // Check for fee fields. Assuming trade_fee_bps (u64) follows immediately.
+            // This handles custom Pump implementation or forks that store fee in the curve.
+            const extraData = accountInfo.data.slice(STANDARD_LAYOUT_SIZE);
+            if (extraData.length >= 8) {
+                feeBps = new BN(extraData.slice(0, 8), 'le');
+            }
+        }
 
         let tokenMintStr: string = '';
+        let outputDecimals: number = 0;
         const isBuy = request.inputMint.equals(MINT_SOL);
 
         if (isBuy) {
@@ -44,11 +58,14 @@ export class PumpHandler implements DexHandler {
 
             if (vault) {
                 tokenMintStr = vault.account.data.parsed.info.mint;
+                outputDecimals = vault.account.data.parsed.info.tokenAmount.decimals;
             } else {
                 tokenMintStr = 'Unknown Token';
+                outputDecimals = 6;
             }
         } else {
             tokenMintStr = MINT_SOL.toBase58();
+            outputDecimals = 9;
         }
 
         let vSol = new BN(decoded.virtualSolReserves, 'le');
@@ -60,7 +77,8 @@ export class PumpHandler implements DexHandler {
         }
 
         let amountOut = new BN(0);
-        const fee = request.inputAmount.mul(PUMP_FEE_BPS).div(new BN(10000));
+        // Use the dynamically fetched feeBps
+        const fee = request.inputAmount.mul(feeBps).div(new BN(10000));
         const amountInWithFee = request.inputAmount.sub(fee);
 
         let impact = 0;
@@ -98,6 +116,7 @@ export class PumpHandler implements DexHandler {
                 minOutputAmount: minOutput,
                 priceImpact: impact,
                 feePaid: fee,
+                outputMintDecimals: outputDecimals,
                 reserves: [request.overrideReserves.reserveA, request.overrideReserves.reserveB]
             };
         }
@@ -112,6 +131,7 @@ export class PumpHandler implements DexHandler {
             minOutputAmount: minOutput,
             priceImpact: impact,
             feePaid: fee,
+            outputMintDecimals: outputDecimals,
             reserves: [realSol, realToken]
         };
     }

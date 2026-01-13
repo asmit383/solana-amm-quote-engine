@@ -87,6 +87,7 @@ async function main() {
         console.log('\n--- Quote Result ---');
         console.log(`Detected DEX Type: ${quote.dexType}`);
         console.log(`Output Mint: ${quote.outputMint}`);
+        console.log(`Output Mint Decimals: ${quote.outputMintDecimals}`);
         console.log(`Estimated Output Amount: ${quote.estimatedOutputAmount.toString()}`);
         console.log(`Minimum Output (after ${slippage}% slippage): ${quote.minOutputAmount.toString()}`);
         console.log(`Trade Fee Paid: ${quote.feePaid.toString()}`);
